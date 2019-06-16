@@ -137,7 +137,7 @@
             <td>{{v.slug}}</td>
             <td class="text-center">
                 <a href="javascript:editTr({&quot;id&quot;:&quot;4&quot;,&quot;slug&quot;:&quot;travel&quot;,&quot;name&quot;:&quot;爱旅行&quot;});" class="btn btn-info btn-xs">编辑</a>
-                <a href="javascript:deleteTr({{ v.id}} );" class="btn btn-danger btn-xs">删除</a>
+                <a href="javascript:void(0)" data_id= "{{ v.id}} "   class="btn btn-danger btn-xs btn_delete">删除</a>
             </td>
         </tr>
      {{/each}}
@@ -154,6 +154,7 @@
                  */
 
             get();
+            // 所有的文章分类函数
             function get() {
                 $.ajax({
                     type: 'get',
@@ -193,6 +194,35 @@
                 // 隐藏模态框
                 $('#addModal').modal('hide');
             });
+
+            // 给所有的删除按钮添加点击事件,因为使用模板动态生成的数据,所以要用委托事件注册
+            $('tbody').on('click', 'a.btn_delete', function () {
+                var that = $(this);
+                // 获取这个a标签的里自定义属性的id
+                var id = $(this).attr('data_id');
+                console.log(id);
+                // 发送ajax请求
+                $.ajax({
+                    type: 'post',
+                    url: 'http://localhost:8000/admin/category_delete',
+                    data: {
+                        id: id
+                    },
+                    success: function (backData) {
+                        // console.log(backData); 
+                        if (backData.code == 200) {
+                            // get();
+                        // 如果数据很多时,,重新渲染就会速度很慢,但是直接在dom树种直接删除条数据就OK
+                        that.parent().parent().remove();
+
+
+                        }
+                    },
+                });
+
+            });
+
+
 
         });
     </script>
