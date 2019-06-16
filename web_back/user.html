@@ -24,19 +24,19 @@
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">用户名称：</label>
                     <div class="col-sm-4">
-                        <input type="text" name="username" class="form-control" id="inputEmail3" value="李思思">
+                        <input type="text" name="username" class="form-control username" id="inputEmail3" value="李思思">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">昵称：</label>
                     <div class="col-sm-4">
-                        <input type="text" name="nickname" class="form-control" id="inputEmail3" value="思思">
+                        <input type="text" name="nickname" class="form-control nickname" id="inputEmail3" value="思思">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">邮箱：</label>
                     <div class="col-sm-4">
-                        <input type="text" name="email" class="form-control" id="inputEmail3" value="lisisi@126.com">
+                        <input type="text" name="email" class="form-control email" id="inputEmail3" value="lisisi@126.com">
                     </div>
                 </div>
 
@@ -45,14 +45,14 @@
                     <div class="col-sm-10">
                         <img src="images/2.jpg" alt="" class="user_pic">
                         <label for="exampleInputFile"><img src="./images/uploadFileIcon.png" alt=""></label>
-                        <input type="file" style="opacity: 0"  id="exampleInputFile" >
+                        <input type="file" style="opacity: 0"  id="exampleInputFile" name="user_pic" >
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">密码：</label>
                     <div class="col-sm-4">
-                        <input type="password" name="password" class="form-control" id="inputEmail3" value="12345678">
+                        <input type="password" name="password" class="form-control password" id="inputEmail3" value="12345678">
                     </div>
                 </div>
 
@@ -83,8 +83,8 @@
                 //    $('input[name=email]').val(backData.data.email);
                 //    $('input[name=password]').val(backData.data.password ); 
                     for (var key in backData.data) {
-                        $(`input[name= ${key}]`).val(backData.data[key]);
-                    }
+                        $(`input.${key}`).val(backData.data[key]);
+                     }
 
                     $('img.user_pic').attr('src', backData.data.user_pic);
                 }
@@ -113,11 +113,11 @@
                     processData: false,
                     success: function (backData) {
                         if (backData.code == 200)
-                            console.log('修改成功');
+                            alert('修改成功');
 
                     }
                 });
-            })
+            }) 
 
         });
     </script>
