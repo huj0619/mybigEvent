@@ -91,14 +91,14 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                        <input type="text" id="recipient_id">
+                        <input id="recipient_id" name="id" type="hidden">
                         <div class="form-group">
                             <label for="recipient-name" class="control-label">分类名称:</label>
-                            <input type="text" class="form-control" id="recipient_name">
+                            <input type="text" name="name" class="form-control" id="recipient_name">
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="control-label">分类别名:</label>
-                            <input type="text" class="form-control" id="recipient_nickname">
+                            <input type="text" name="slug" class="form-control" id="recipient_nickname">
                         </div>
                     </form>
                 </div>
@@ -171,18 +171,25 @@
                 // 判断这个按钮有没有这个btn-success类.如果有就是保存按钮
                 if ($(this).hasClass('btn-success')) {
                     // 获取用户修改后的文章名称和文章别名
-                    var editId = $('#recipient_id').val();
-                    var editName = $('#recipient_name').val();
-                    var editNickName = $('#recipient_nickname').val();
+                    // var editId = $('#recipient_id').val();
+                    // var editName = $('#recipient_name').val();
+                    // var editNickName = $('#recipient_nickname').val();
+                    var data1 = $('form').serialize()//序列化
+                    // 以上这个方式是jQuery的方法,会把form表单里面的有name属性的值
+                    // 拼接成name-value&name2-value2这种格式的字符串
+                    // id =8&name=军事2&slug=junshi
+                    // 和formData区别:此方法是jQuery的方法,formData是原生JS的
+                    // forData生成对象,还可以上传文件.此会生成字符串,不能上传文件
                     // 获取后发送AJAX请求修改
                     $.ajax({
                         type: 'post',
                         url: 'http://localhost:8000/admin/category_edit',
-                        data: {
-                            id: editId,
-                            name: editName,
-                            slug: editNickName
-                        },
+                        // data: {
+                        //     id: editId,
+                        //     name: editName,
+                        //     slug: editNickName
+                        // },
+                        data:data1,
                         success: function (backData) {
                             // console.log(backData);
                             //   修改成功后重新渲染数据  
