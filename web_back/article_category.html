@@ -189,17 +189,19 @@
                         //     name: editName,
                         //     slug: editNickName
                         // },
-                        data:data1,
+                        data: data1,
                         success: function (backData) {
                             // console.log(backData);
                             //   修改成功后重新渲染数据  
                             if (backData.code == 200) {
                                 get();
+
                             }
                         }
                     });
 
                 } else {
+
                     //按钮为新增按钮,就执行下面代码
                     // 获取用户新的分类名称和分类别名
                     var recipient_name = $('#recipient_name').val();
@@ -251,6 +253,9 @@
             $('#addCategoty').on('click', function () {
                 $('#addModal .modal-title').html('新增分类');
                 $('#model_add').text('新增').removeClass('btn-success');
+                $('#recipient_id').val("");
+                $('#recipient_name').val("");
+                $('#recipient_nickname').val("");
             });
 
 
