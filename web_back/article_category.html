@@ -73,14 +73,15 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-center">
-                            <a href="#" id="addCategoty" class="btn btn-success" data-toggle="modal" data-target="#addModal">新增分类</a>
+                            <a href="#" id="addCategoty" class="btn btn-success" data-toggle="modal"
+                                data-target="#addModal">新增分类</a>
                         </td>
                     </tr>
                 </tfoot>
             </table>
-        </div>  
+        </div>
     </div>
-  
+
     <div class="modal fade" id="addModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -147,9 +148,9 @@
                  1. 结合模板引擎来渲染
                  */
 
-          
+
             // 所有的文章分类函数封装
-            function get() { 
+            function get() {
                 $.ajax({
                     type: 'get',
                     url: 'http://localhost:8000/admin/category_search',
@@ -164,28 +165,35 @@
             }
             // 页面一进来调用函数
             get();
-            // 点击模态框确认按钮
+            // 点击模态框,保存/新增按钮
             $('#model_add').click(function () {
-                // 获取用户新的分类名称和分类别名
-                var recipient_name = $('#recipient_name').val();
-                var recipient_nickname = $('#recipient_nickname').val();
-                //法功ajax请求
-                $.ajax({
-                    type: 'post',
-                    url: 'http://localhost:8000/admin/category_add',
-                    data: {
-                        name: recipient_name,
-                        slug: recipient_nickname
-                    },
-                    success: function (backData) {
-                        // 新增成功后,重新调用一次ajax请求
-                        if (backData.code == 200) {
-                            get();
+                // 判断这个按钮有没有这个btn-success类.如果有就是保存按钮
+                if ($(this).hasClass('btn-success')) {
+                    
+                } else {
+                    //按钮为新增按钮,就执行下面代码
+                    // 获取用户新的分类名称和分类别名
+                    var recipient_name = $('#recipient_name').val();
+                    var recipient_nickname = $('#recipient_nickname').val();
+                    //法功ajax请求
+                    $.ajax({
+                        type: 'post',
+                        url: 'http://localhost:8000/admin/category_add',
+                        data: {
+                            name: recipient_name,
+                            slug: recipient_nickname
+                        },
+                        success: function (backData) {
+                            // 新增成功后,重新调用一次ajax请求
+                            if (backData.code == 200) {
+                                get();
+                            }
+
                         }
 
-                    }
+                    });
+                }
 
-                });
                 // 隐藏模态框
                 $('#addModal').modal('hide');
             });
@@ -196,13 +204,20 @@
 
             // 给编辑按钮添加点击事件,因为使用模板动态生成的数据,所以要用委托事件注册
             $('tbody').on('click', 'a.btn_edit', function () {
+                // 获取当前点击的这个编辑按钮对应的文章类别 和文章类别名
+               var name =  $(this).parent().prev().prev().text();//文章名称
+               var slug = $(this).parent().prev().text();//文章别名
+            //   把以上两个值赋给弹出框对出的内容
+            $('#recipient_name').val(name) ;
+            $('#recipient_nickname').val(slug);
+                
                 $('#addModal .modal-title').html('修改分类');
                 $('#model_add').text('保存').addClass('btn-success');
                 $('#addModal').modal('show');
             });
 
             // 点击新增分类按钮,弹出的模态框里面的样式和名字还原
-            $('#addCategoty').on('click',function(){
+            $('#addCategoty').on('click', function () {
                 $('#addModal .modal-title').html('新增分类');
                 $('#model_add').text('新增').removeClass('btn-success');
             });
@@ -219,10 +234,10 @@
                 // console.log(id); 
                 // 发送ajax请求,删除这条记录
                 $.ajax({
-                    type:'post',
+                    type: 'post',
                     url: 'http://localhost:8000/admin/category_delete',
                     data: {
-                        id:  id
+                        id: id
                     },
                     success: function (backData) {
                         // console.log(backData); 
