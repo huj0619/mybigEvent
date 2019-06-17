@@ -91,6 +91,7 @@
                 </div>
                 <div class="modal-body">
                     <form>
+                        <input type="text" id="recipient_id">
                         <div class="form-group">
                             <label for="recipient-name" class="control-label">分类名称:</label>
                             <input type="text" class="form-control" id="recipient_name">
@@ -169,7 +170,28 @@
             $('#model_add').click(function () {
                 // 判断这个按钮有没有这个btn-success类.如果有就是保存按钮
                 if ($(this).hasClass('btn-success')) {
-                    
+                    // 获取用户修改后的文章名称和文章别名
+                    var editId = $('#recipient_id').val();
+                    var editName = $('#recipient_name').val();
+                    var editNickName = $('#recipient_nickname').val();
+                    // 获取后发送AJAX请求修改
+                    $.ajax({
+                        type: 'post',
+                        url: 'http://localhost:8000/admin/category_edit',
+                        data: {
+                            id: editId,
+                            name: editName,
+                            slug: editNickName
+                        },
+                        success: function (backData) {
+                            // console.log(backData);
+                            //   修改成功后重新渲染数据  
+                            if (backData.code == 200) {
+                                get();
+                            }
+                        }
+                    });
+
                 } else {
                     //按钮为新增按钮,就执行下面代码
                     // 获取用户新的分类名称和分类别名
@@ -202,15 +224,17 @@
 
 
 
-            // 给编辑按钮添加点击事件,因为使用模板动态生成的数据,所以要用委托事件注册
+            // 给编辑按钮添加点击事件,因为使用模板动 态生成的数据,所以要用委托事件注册
             $('tbody').on('click', 'a.btn_edit', function () {
                 // 获取当前点击的这个编辑按钮对应的文章类别 和文章类别名
-               var name =  $(this).parent().prev().prev().text();//文章名称
-               var slug = $(this).parent().prev().text();//文章别名
-            //   把以上两个值赋给弹出框对出的内容
-            $('#recipient_name').val(name) ;
-            $('#recipient_nickname').val(slug);
-                
+                var id = $(this).attr('data_id');
+                var name = $(this).parent().prev().prev().text();//文章名称
+                var slug = $(this).parent().prev().text();//文章别名
+                //   把以上两个值赋给弹出框对出的内容
+                $('#recipient_name').val(name);
+                $('#recipient_nickname').val(slug);
+                $('#recipient_id').val(id);
+
                 $('#addModal .modal-title').html('修改分类');
                 $('#model_add').text('保存').addClass('btn-success');
                 $('#addModal').modal('show');
