@@ -140,7 +140,11 @@
     </script>
     <script>
         $(function () {
-            /*
+           
+
+            // 所有的文章分类函数封装
+            function get() {
+                 /*
                  获取文章分类信息
                  步骤
                  1. 进入页面之后
@@ -149,9 +153,6 @@
                  1. 结合模板引擎来渲染
                  */
 
-
-            // 所有的文章分类函数封装
-            function get() {
                 $.ajax({
                     type: 'get',
                     url: 'http://localhost:8000/admin/category_search',
