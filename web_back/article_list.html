@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="css/main.css">
     <script src="js/jquery-1.12.4.min.js"></script>
     <script src="./js/template-web.js"></script>
+    <script src="./js/jquery.twbsPagination.js"></script>
 </head>
 
 <body>
@@ -298,6 +299,9 @@
         $('#release_btn').click(function () {
             window.parent.setMenu(1, 1);
         });
+
+
+
         //一进入次页面就要加载所有的文章列表发送ajax请求
         $.ajax({
             type: 'get',
@@ -310,10 +314,9 @@
                 }
             }
         });
+        // 筛选文章封装成一个方法
+        function get(myPage) {
 
-        //点击筛选按钮,发送ajax请求,获取对应类型的所有文章
-        $('#btnSearch').on('click', function (e) {
-            e.preventDefault();
             // 获取文章类别和文章状态
             var type = $('#selCategory').val();
             var state = $('#selStatus').val();
@@ -324,23 +327,67 @@
                     key: '',
                     type: type,
                     sate: state,
-                    page: 1,
+                    page: myPage,
                     perpage: 6
                 },
-                dataType:'json',
+                dataType: 'json',
                 success: function (backData) {
                     // console.log(backData);
-                    if(backData.code == 200){
-                      var resHtml = template('tmp_article_list',backData);
-                      $('tbody').html(resHtml);
+                    if (backData.code == 200) {
+                        var resHtml = template('tmp_article_list', backData);
+                        $('tbody').html(resHtml);
+ 
+                        //分页插件的总页数获取,总页码条重新生成
+                        var totalPages = backData.totalPage;
+                        if (mytotalPage != totalPages) { //如果通过ajax响应回来的数据得到的页面和 刚才的页码不一样
+                            mytotalPage = totalPages;     //那就应该去执行下面的这些代码,重新的生成页码条.
+
+                            var currentPage = 1; //当前页
+
+                            $pagination.twbsPagination('destroy');
+                            $pagination.twbsPagination($.extend({}, defaultOpts, {
+                                startPage: currentPage,
+                                totalPages: totalPages
+                            }));
+                        }
                     }
                 }
             });
+
+        }
+
+        //声明一个变量,用来记录总的页码.
+        var mytotalPage = 10;
+
+
+        //分页插件的使用.
+        //使用动态获取总页数  的分页插件的方法.
+        var $pagination = $('.pagination');
+        var defaultOpts = {
+            totalPages: mytotalPage,
+            visiblePages: 7,
+            first: '首页',
+            last: '尾页',
+            next: '下一页',
+            prev: '上一页',
+            onPageClick: function (event, page) {
+                //console.log(event); //点击事件.
+                //console.log(page);//点击的页码
+                get(page);
+            }
+        };
+        $pagination.twbsPagination(defaultOpts);
+
+
+        //点击筛选按钮,发送ajax请求,获取对应类型的所有文章
+        $('#btnSearch').on('click', function (e) {
+            e.preventDefault();
+            get(1);
         });
-        
+
         // 一进入页面就要筛选一次(所有分类,所有状态)
-        $('#btnSearch').trigger('click'); 
-   
+        $('#btnSearch').trigger('click');
+
     </script>
 
 </body>
